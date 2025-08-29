@@ -7,3 +7,5 @@ sealed class BlocEvent {}
 class CounterIncrementEvent extends BlocEvent{
   
 }
+class CounterSnackbarActionEvent extends BlocEvent{}
+class CounterIncreamentActionEvent extends BlocEvent{}

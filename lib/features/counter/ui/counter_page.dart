@@ -12,6 +12,7 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> {
   BlocBloc counterBloc=BlocBloc();
+  int val=0;
   @override
 void initState() {
   super.initState();
@@ -27,31 +28,65 @@ void initState() {
         },
         child: Icon(Icons.add),
       ),
-      body: BlocBuilder<BlocBloc, BlocState>(
+      body:BlocListener<BlocBloc,BlocState>(
         bloc: counterBloc,
-        builder: (context, state) {
-          switch(state.runtimeType){
-
-            case CounterIncrementState :
-            final sucessState=state as CounterIncrementState;
-            return Center(
+        listener: (context, state) {
+          if(state is CounterSnackbarActionState ){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("snackbar")));
+          }
+          else if(state is CounterIncrementActionState){
+            setState(() {
+              val=val+1;
+            });
+          }
+        },
+        child:Center(
             child: Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text(sucessState.val.toString(), style: TextStyle(fontSize: 60))],
+                children: [Text(val.toString(), style: TextStyle(fontSize: 60)),
+                SizedBox(height: 20,),
+                ElevatedButton(onPressed: (){
+                  counterBloc.add(CounterIncreamentActionEvent());
+                }, child: Text("Add")),
+                SizedBox(height: 20,),
+                ElevatedButton(onPressed: (){
+                  counterBloc.add(CounterSnackbarActionEvent());
+                }, child: Text("Scaffold")),
+                ],
               ),
             ),
-          );
-          // break;
-          default:return Center(
-              child: Text('something went wrong', style: TextStyle(fontSize: 60),
-            ),
-          );
-            
-          }
-         
-        },
       ),
+      ),
+    
     );
   }
 }
+//       body: BlocBuilder<BlocBloc, BlocState>(
+//         bloc: counterBloc,
+//         builder: (context, state) {
+//           switch(state.runtimeType){
+
+//             case CounterIncrementState :
+//             final sucessState=state as CounterIncrementState;
+            // return Center(
+            // child: Container(
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [Text(sucessState.val.toString(), style: TextStyle(fontSize: 60))],
+            //   ),
+            // ),
+//           );
+//           // break;
+//           default:return Center(
+//               child: Text('something went wrong', style: TextStyle(fontSize: 60),
+//             ),
+//           );
+            
+//           }
+         
+//         },
+//       ),
+//     );
+//   }
+// }

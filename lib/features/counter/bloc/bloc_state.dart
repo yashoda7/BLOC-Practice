@@ -5,11 +5,13 @@ part of 'bloc_bloc.dart';
 sealed class BlocState {}
 
 final class BlocInitial extends BlocState {}
+abstract class CounterState extends BlocState{}
+class CounterSnackbarActionState extends CounterState{}
 
 class CounterIncrementState extends BlocState {
   int val;
    CounterIncrementState({
     required this.val,
   });
-
 }
+  class CounterIncrementActionState extends BlocState{}
