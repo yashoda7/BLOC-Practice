@@ -28,27 +28,30 @@ void initState() {
         },
         child: Icon(Icons.add),
       ),
-      body:BlocListener<BlocBloc,BlocState>(
+      body:BlocConsumer<BlocBloc,BlocState>(
         bloc: counterBloc,
+        listenWhen: (previous, current) => current is CounterSnackbarActionState,
+        buildWhen: (previous, current) => current is! CounterSnackbarActionState,
         listener: (context, state) {
           if(state is CounterSnackbarActionState ){
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("snackbar")));
           }
-          else if(state is CounterIncrementActionState){
-            setState(() {
-              val=val+1;
-            });
-          }
+          // else if(state is CounterIncrementActionState){
+          //   setState(() {
+          //     val=val+1;
+          //   });
+          // }
         },
-        child:Center(
+        builder: (context, state) { 
+        switch(state.runtimeType){
+
+            case CounterIncrementState :
+            final sucessState=state as CounterIncrementState;
+            return Center(
             child: Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text(val.toString(), style: TextStyle(fontSize: 60)),
-                SizedBox(height: 20,),
-                ElevatedButton(onPressed: (){
-                  counterBloc.add(CounterIncreamentActionEvent());
-                }, child: Text("Add")),
+                children: [Text(sucessState.val.toString(), style: TextStyle(fontSize: 60)),
                 SizedBox(height: 20,),
                 ElevatedButton(onPressed: (){
                   counterBloc.add(CounterSnackbarActionEvent());
@@ -56,8 +59,16 @@ void initState() {
                 ],
               ),
             ),
+          );
+          // break;
+          default:return Center(
+              child: Text('something went wrong', style: TextStyle(fontSize: 60),
+            ),
+          );
+        }
+        }
       ),
-      ),
+
     
     );
   }
@@ -65,23 +76,23 @@ void initState() {
 //       body: BlocBuilder<BlocBloc, BlocState>(
 //         bloc: counterBloc,
 //         builder: (context, state) {
-//           switch(state.runtimeType){
+          // switch(state.runtimeType){
 
-//             case CounterIncrementState :
-//             final sucessState=state as CounterIncrementState;
-            // return Center(
-            // child: Container(
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [Text(sucessState.val.toString(), style: TextStyle(fontSize: 60))],
-            //   ),
-            // ),
-//           );
-//           // break;
-//           default:return Center(
-//               child: Text('something went wrong', style: TextStyle(fontSize: 60),
-//             ),
-//           );
+          //   case CounterIncrementState :
+          //   final sucessState=state as CounterIncrementState;
+          //   return Center(
+          //   child: Container(
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [Text(sucessState.val.toString(), style: TextStyle(fontSize: 60))],
+          //     ),
+          //   ),
+          // );
+          // // break;
+          // default:return Center(
+          //     child: Text('something went wrong', style: TextStyle(fontSize: 60),
+          //   ),
+          // );
             
 //           }
          
